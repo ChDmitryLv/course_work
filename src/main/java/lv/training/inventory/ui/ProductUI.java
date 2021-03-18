@@ -44,7 +44,7 @@ public class ProductUI {
     }
 
     private Integer chooseOperation() {
-        Integer operationNumber = null;
+        int operationNumber;
         while (!sc.hasNextInt()) {
             System.out.println("Only number allowed");
             sc.next();
@@ -61,7 +61,7 @@ public class ProductUI {
     }
 
     private BigDecimal priceInput() {
-        BigDecimal price = null;
+        BigDecimal price;
         System.out.println("Product price:");
         while (!sc.hasNextBigDecimal()) {
             System.out.println("Price must be BigDecimal");
