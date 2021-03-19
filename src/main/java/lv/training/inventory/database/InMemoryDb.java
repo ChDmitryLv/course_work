@@ -24,7 +24,7 @@ public class InMemoryDb implements Database{
         for (Product product: productDb){
             if (product.getId().equals(id)) {return product;}
         }
-        return new Product();
+        return null;
     }
 
     @Override

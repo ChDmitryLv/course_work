@@ -6,6 +6,7 @@ import lv.training.inventory.model.ProductInput;
 
 import java.util.List;
 
+
 public class ProductServiceImpl implements ProductService {
 
     private static int counter = 1;
@@ -34,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void update(Database db, ProductInput updatedProduct, Integer id) {
-        db.update(updatedProduct,id);
+        db.update(updatedProduct, id);
     }
 
     @Override
