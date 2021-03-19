@@ -1,8 +1,11 @@
 package lv.training.inventory.service;
 
 import lv.training.inventory.database.Database;
+import lv.training.inventory.exceptions.ProductNotFound;
+import lv.training.inventory.exceptions.NotLessThanZero;
 import lv.training.inventory.model.Product;
 import lv.training.inventory.model.ProductInput;
+import lv.training.inventory.ui.common.Utils;
 
 import java.util.List;
 
@@ -10,6 +13,8 @@ import java.util.List;
 public class ProductServiceImpl implements ProductService {
 
     private static int counter = 1;
+    Utils utils = new Utils();
+    Validator validator = new Validator();
 
     @Override
     public void create(ProductInput productInput, Database db) {
@@ -34,8 +39,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void update(Database db, ProductInput updatedProduct, Integer id) {
-        db.update(updatedProduct, id);
+    public void update(Database db) throws NotLessThanZero, ProductNotFound {
+        int id = utils.idInput();
+        validator.validateId(id);
+        Product product = find(id, db);
+        validator.notNull(product);
+        ProductInput productInput = utils.productInput();
+        validator.validateProductInput(productInput);
+        db.update(productInput, id);
     }
 
     @Override

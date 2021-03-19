@@ -1,12 +1,13 @@
 package lv.training.inventory.ui.menu;
 
 import lv.training.inventory.database.Database;
+import lv.training.inventory.exceptions.ProductNotFound;
+import lv.training.inventory.exceptions.NotLessThanZero;
 import lv.training.inventory.service.ProductService;
 import lv.training.inventory.ui.common.Utils;
 import lv.training.inventory.ui.create.CreateProductUI;
 import lv.training.inventory.ui.delete.DeleteProductUI;
 import lv.training.inventory.ui.find.FindProductUI;
-import lv.training.inventory.ui.update.UpdateProductUI;
 
 import java.util.Scanner;
 
@@ -24,7 +25,6 @@ public class UserMenu {
 
     CreateProductUI createProductUI = new CreateProductUI();
     FindProductUI findProductUI = new FindProductUI();
-    UpdateProductUI updateProduct = new UpdateProductUI();
     DeleteProductUI deleteProductUI = new DeleteProductUI();
     Utils utils = new Utils();
 
@@ -36,7 +36,13 @@ public class UserMenu {
                 case 1 -> createProductUI.createProduct(service, db);
                 case 2 -> findProductUI.findProduct(service, db);
                 case 3 -> utils.printAll(service, db);
-                case 4 -> updateProduct.updateProduct(service, db);
+                case 4 -> {
+                    try {
+                        service.update(db);
+                    } catch (NotLessThanZero | ProductNotFound e) {
+                        e.printStackTrace();
+                    }
+                }
                 case 5 -> deleteProductUI.deleteProduct(service, db);
                 case 0 -> status = false;
                 default -> {

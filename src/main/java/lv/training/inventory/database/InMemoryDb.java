@@ -2,6 +2,7 @@ package lv.training.inventory.database;
 
 import lv.training.inventory.model.Product;
 import lv.training.inventory.model.ProductInput;
+
 import java.util.ArrayList;
 import java.util.List;
 
