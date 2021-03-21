@@ -4,6 +4,8 @@ import lv.training.inventory.database.DataBaseFactory;
 import lv.training.inventory.database.Database;
 import lv.training.inventory.service.ProductService;
 import lv.training.inventory.service.ProductServiceImpl;
+import lv.training.inventory.ui.InventoryUI;
+import lv.training.inventory.ui.common.Utils;
 import lv.training.inventory.ui.menu.UserMenu;
 
 
@@ -11,8 +13,11 @@ public class Application {
     public static void main(String[] args) {
         @SuppressWarnings({"AccessStaticViaInstance", "InstantiationOfUtilityClass"})
         Database db = new DataBaseFactory().createDatabase();
-        ProductService service = new ProductServiceImpl();
-        UserMenu menu = new UserMenu(db, service);
+        InventoryUI utils = new Utils();
+        ProductService service = new ProductServiceImpl(utils, db);
+
+        UserMenu menu = new UserMenu(service);
+
         menu.start();
     }
 }

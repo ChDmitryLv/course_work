@@ -1,49 +1,39 @@
 package lv.training.inventory.ui.menu;
 
-import lv.training.inventory.database.Database;
-import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.exceptions.NotLessThanZero;
+import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.service.ProductService;
-import lv.training.inventory.ui.common.Utils;
 import lv.training.inventory.ui.create.CreateProductUI;
-import lv.training.inventory.ui.delete.DeleteProductUI;
-import lv.training.inventory.ui.find.FindProductUI;
 
 import java.util.Scanner;
 
 public class UserMenu {
-    private final Database db;
     private final ProductService service;
 
-
-    public UserMenu(Database db, ProductService service) {
-        this.db = db;
+    public UserMenu(ProductService service) {
         this.service = service;
     }
 
     static Scanner sc = new Scanner(System.in);
 
     CreateProductUI createProductUI = new CreateProductUI();
-    FindProductUI findProductUI = new FindProductUI();
-    DeleteProductUI deleteProductUI = new DeleteProductUI();
-    Utils utils = new Utils();
 
     public void start() {
         boolean status = true;
         while (status) {
             menu();
             switch (chooseOperation()) {
-                case 1 -> createProductUI.createProduct(service, db);
-                case 2 -> findProductUI.findProduct(service, db);
-                case 3 -> utils.printAll(service, db);
-                case 4 -> {
+                case 1 -> createProductUI.createProduct(service);
+                case 2 -> {
                     try {
-                        service.update(db);
-                    } catch (NotLessThanZero | ProductNotFound e) {
-                        e.printStackTrace();
+                        service.find();
+                    } catch (NotLessThanZero | ProductNotFound notLessThanZero) {
+                        notLessThanZero.printStackTrace();
                     }
                 }
-                case 5 -> deleteProductUI.deleteProduct(service, db);
+                case 3 -> service.readAll();
+                case 4 -> service.update();
+                case 5 -> service.deleteProduct();
                 case 0 -> status = false;
                 default -> {
                 }
