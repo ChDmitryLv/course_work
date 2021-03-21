@@ -16,6 +16,18 @@ public class Product {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public Category getCategory() {
+        return category;
+    }
+
     public void setName(String name) {
         this.name = name;
     }

@@ -1,32 +1,20 @@
-package lv.training.inventory.ui.common;
+package lv.training.inventory.ui;
 
-import lv.training.inventory.database.Database;
-import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
-import lv.training.inventory.model.ProductInput;
-import lv.training.inventory.service.ProductService;
+import lv.training.inventory.ui.UIOperations;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
-public class Utils {
+public class UIOperationsImpl implements UIOperations {
+
+    public UIOperationsImpl() {
+    }
 
     static Scanner sc = new Scanner(System.in);
 
-    public ProductInput productInput() {
-        String name = titleInput();
-        BigDecimal price = priceInput();
-        int categoryNumber = categoryInput();
-        Category category = switch (categoryNumber) {
-            case 1 -> Category.FRUIT;
-            case 2 -> Category.DRINK;
-            case 3 -> Category.MEAL;
-            default -> throw new IllegalStateException("Unexpected value: " + categoryNumber);
-        };
-        return new ProductInput(name, price, category);
-    }
-
+    @Override
     public String titleInput() {
         String title;
         System.out.println("Set title: ");
@@ -34,6 +22,7 @@ public class Utils {
         return title;
     }
 
+    @Override
     public BigDecimal priceInput() {
         BigDecimal price;
         System.out.println("Product price:");
@@ -45,6 +34,7 @@ public class Utils {
         return price;
     }
 
+    @Override
     public int idInput() {
         int id;
         System.out.println("Enter ID:");
@@ -56,6 +46,7 @@ public class Utils {
         return id;
     }
 
+    @Override
     public int categoryInput() {
         int categoryNumber;
         do {
@@ -69,18 +60,15 @@ public class Utils {
         return categoryNumber;
     }
 
-    public void printAll(ProductService service, Database db) {
-        List<Product> list = service.printAll(db);
-        printResult(list);
-    }
-
-    public void printResult(Product product) {
-        System.out.println(product);
-    }
-
-    public void printResult(List<Product> list) {
+    @Override
+    public void printAll(List<Product> list) {
         for (Product it : list) {
             printResult(it);
         }
+    }
+
+    @Override
+    public void printResult(Product product) {
+        System.out.println(product);
     }
 }
