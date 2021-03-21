@@ -21,30 +21,31 @@ public class ProductServiceImpl implements ProductService {
         this.db = db;
     }
 
-    private static int counter = 1;
     Validator validator = new Validator();
 
     @Override
     public void create() {
-        ProductInput productInput = productInput();
-        Product product = new Product();
-        product.setName(productInput.getName());
-        product.setPrice(productInput.getPrice());
-        product.setCategory(productInput.getCategory());
-        product.setId(counter);
-        counter++;
-
-        db.create(product);
+        try {
+            ProductInput productInput = productInput();
+            validator.validateProductInput(productInput);
+            Product product = new Product();
+            product.setName(productInput.getName());
+            product.setPrice(productInput.getPrice());
+            product.setCategory(productInput.getCategory());
+            db.create(product);
+        } catch (NotLessThanZero notLessThanZero) {
+            notLessThanZero.printStackTrace();
+        }
     }
 
     @Override
     public Product find() throws NotLessThanZero, ProductNotFound {
         int id = utils.idInput();
         Product product;
-            validator.validateId(id);
-            product = db.read(id);
-            validator.notNull(product);
-            utils.printResult(product);
+        validator.validateId(id);
+        product = db.read(id);
+        validator.notNull(product);
+        utils.printResult(product);
 
         return product;
     }
@@ -69,7 +70,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public void deleteProduct()  {
+    public void deleteProduct() {
 
         try {
             Product product = find();

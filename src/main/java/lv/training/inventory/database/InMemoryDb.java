@@ -7,23 +7,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class InMemoryDb implements Database{
+public class InMemoryDb implements Database {
 
     private final List<Product> productDb;
+    private int counter;
 
     public InMemoryDb() {
         this.productDb = new ArrayList<>();
+        counter = 1;
     }
 
     @Override
     public void create(Product product) {
+        product.setId(counter);
+        counter++;
         productDb.add(product);
     }
 
     @Override
     public Product read(Integer id) {
-        for (Product product: productDb){
-            if (product.getId().equals(id)) {return product;}
+        for (Product product : productDb) {
+            if (product.getId().equals(id)) {
+                return product;
+            }
         }
         return null;
     }
@@ -35,13 +41,14 @@ public class InMemoryDb implements Database{
 
     @Override
     public void update(ProductInput product, Integer id) {
-        for (Product it: productDb){
-            if(it.getId().equals(id))
+        for (Product it : productDb) {
+            if (it.getId().equals(id)) {
                 it.setName(product.getName());
                 it.setPrice(product.getPrice());
                 it.setCategory(product.getCategory());
             }
         }
+    }
 
     @Override
     public void delete(Integer id) {
