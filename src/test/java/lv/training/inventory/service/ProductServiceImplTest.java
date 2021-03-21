@@ -33,7 +33,7 @@ class ProductServiceImplTest {
 
     @Test
     void find() throws NotLessThanZero, ProductNotFound {
-        UITestFunctions testUI = new UITestFunctions();
+        UIOperationsTestFunctions testUI = new UIOperationsTestFunctions();
         testUI.setId(1);
         Database db = initDb();
         ProductService service = new ProductServiceImpl(testUI,db);
@@ -58,7 +58,7 @@ class ProductServiceImplTest {
     @Test
     void readAll(){
         Database db = initDb();
-        UITestFunctions testUI = new UITestFunctions();
+        UIOperationsTestFunctions testUI = new UIOperationsTestFunctions();
         ProductService service = new ProductServiceImpl(testUI,db);
 
         String shouldBeNull = testUI.getPrintAllCalled();
@@ -72,7 +72,7 @@ class ProductServiceImplTest {
 
     @Test
     void update(){
-        UITestFunctions testUI = new UITestFunctions();
+        UIOperationsTestFunctions testUI = new UIOperationsTestFunctions();
         testUI.setId(2);
         testUI.setTitle("Cola");
         testUI.setPrice(BigDecimal.valueOf(9.99));

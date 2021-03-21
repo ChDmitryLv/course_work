@@ -1,17 +1,15 @@
-package lv.training.inventory.ui.common;
+package lv.training.inventory.ui;
 
-import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
-import lv.training.inventory.model.ProductInput;
-import lv.training.inventory.ui.InventoryUI;
+import lv.training.inventory.ui.UIOperations;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Scanner;
 
-public class Utils implements InventoryUI {
+public class UIOperationsImpl implements UIOperations {
 
-    public Utils() {
+    public UIOperationsImpl() {
     }
 
     static Scanner sc = new Scanner(System.in);

@@ -1,14 +1,12 @@
 package lv.training.inventory.service;
 
-import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
-import lv.training.inventory.model.ProductInput;
-import lv.training.inventory.ui.InventoryUI;
+import lv.training.inventory.ui.UIOperations;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-public class UITestFunctions implements InventoryUI {
+public class UIOperationsTestFunctions implements UIOperations {
 
     private int id;
     private String printAllCalled;

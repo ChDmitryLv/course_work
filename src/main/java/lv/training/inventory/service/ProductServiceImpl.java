@@ -6,17 +6,17 @@ import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
 import lv.training.inventory.model.ProductInput;
-import lv.training.inventory.ui.InventoryUI;
+import lv.training.inventory.ui.UIOperations;
 
 import java.math.BigDecimal;
 
 
 public class ProductServiceImpl implements ProductService {
 
-    private final InventoryUI utils;
+    private final UIOperations utils;
     private final Database db;
 
-    public ProductServiceImpl(InventoryUI utils, Database db) {
+    public ProductServiceImpl(UIOperations utils, Database db) {
         this.utils = utils;
         this.db = db;
     }

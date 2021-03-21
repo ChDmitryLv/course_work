@@ -1,9 +1,8 @@
-package lv.training.inventory.ui.menu;
+package lv.training.inventory.ui;
 
 import lv.training.inventory.exceptions.NotLessThanZero;
 import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.service.ProductService;
-import lv.training.inventory.ui.create.CreateProductUI;
 
 import java.util.Scanner;
 
@@ -16,14 +15,12 @@ public class UserMenu {
 
     static Scanner sc = new Scanner(System.in);
 
-    CreateProductUI createProductUI = new CreateProductUI();
-
     public void start() {
         boolean status = true;
         while (status) {
             menu();
             switch (chooseOperation()) {
-                case 1 -> createProductUI.createProduct(service);
+                case 1 -> service.create();
                 case 2 -> {
                     try {
                         service.find();

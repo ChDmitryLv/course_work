@@ -5,7 +5,7 @@ import lv.training.inventory.model.Product;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface InventoryUI {
+public interface UIOperations {
 
     String titleInput();
     BigDecimal priceInput();
