@@ -87,11 +87,6 @@ class ProductServiceImplTest {
         assertEquals("Cola",afterUpdate.getName());
         assertEquals(BigDecimal.valueOf(9.99), afterUpdate.getPrice());
         assertEquals(Category.DRINK,afterUpdate.getCategory());
-
-//        testUI.setId(-2);
-//        Exception lessThanZeroException = assertThrows(NotLessThanZero.class, () -> service.update());
-//
-//        assertEquals("ID must be greater than 0",lessThanZeroException.getMessage());
     }
 
     @Test
