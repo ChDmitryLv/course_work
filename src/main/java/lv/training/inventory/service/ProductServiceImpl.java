@@ -13,11 +13,11 @@ import java.math.BigDecimal;
 
 public class ProductServiceImpl implements ProductService {
 
-    private final UIOperations utils;
+    private final UIOperations ui;
     private final Database db;
 
-    public ProductServiceImpl(UIOperations utils, Database db) {
-        this.utils = utils;
+    public ProductServiceImpl(UIOperations ui, Database db) {
+        this.ui = ui;
         this.db = db;
     }
 
@@ -40,19 +40,18 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product find() throws NotLessThanZero, ProductNotFound {
-        int id = utils.idInput();
+        int id = ui.idInput();
         Product product;
         validator.validateId(id);
         product = db.read(id);
         validator.notNull(product);
-        utils.printResult(product);
-
+        ui.printResult(product);
         return product;
     }
 
     @Override
     public void readAll() {
-        utils.printAll(db.readAll());
+        ui.printAll(db.readAll());
     }
 
     @Override
@@ -60,7 +59,7 @@ public class ProductServiceImpl implements ProductService {
         Product product;
         try {
             product = find();
-            validator.notNull(product);
+            //validator.notNull(product);
             ProductInput productInput = productInput();
             validator.validateProductInput(productInput);
             db.update(productInput, product.getId());
@@ -82,9 +81,9 @@ public class ProductServiceImpl implements ProductService {
     }
 
     public ProductInput productInput() {
-        String name = utils.titleInput();
-        BigDecimal price = utils.priceInput();
-        int categoryNumber = utils.categoryInput();
+        String name = ui.titleInput();
+        BigDecimal price = ui.priceInput();
+        int categoryNumber = ui.categoryInput();
         Category category = switch (categoryNumber) {
             case 1 -> Category.FRUIT;
             case 2 -> Category.DRINK;
