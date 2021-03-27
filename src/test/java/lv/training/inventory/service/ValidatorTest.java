@@ -1,9 +1,9 @@
 package lv.training.inventory.service;
 
+import lv.training.inventory.exceptions.NoEmptyTitle;
+import lv.training.inventory.exceptions.NotExistingCategory;
 import lv.training.inventory.exceptions.NotLessThanZero;
 import lv.training.inventory.exceptions.ProductNotFound;
-import lv.training.inventory.model.Category;
-import lv.training.inventory.model.ProductInput;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
@@ -16,10 +16,9 @@ class ValidatorTest {
     Validator validator = new Validator();
 
     @Test
-    void validateProductInput() {
-        ProductInput productInput = new ProductInput("Pasta", BigDecimal.valueOf(-10), Category.MEAL);
-
-        Exception exception = assertThrows(NotLessThanZero.class, () -> validator.validateProductInput(productInput));
+    void validateProductPrice() {
+        Exception exception = assertThrows(NotLessThanZero.class,
+                () -> validator.validateProductPrice(BigDecimal.valueOf(-10.0)));
         assertEquals("Price must be greater than 0",exception.getMessage());
     }
 
@@ -33,5 +32,17 @@ class ValidatorTest {
     void notNull() {
         Exception exception = assertThrows(ProductNotFound.class, () -> validator.notNull(null));
         assertEquals("Product not found",exception.getMessage());
+    }
+
+    @Test
+    void notExistingCategory(){
+        Exception exception = assertThrows(NotExistingCategory.class, () -> validator.validateCategoryInput(7));
+        assertEquals("Not existing category",exception.getMessage());
+    }
+
+    @Test
+    void notEmpty(){
+        Exception exception = assertThrows(NoEmptyTitle.class, () -> validator.notEmpty(""));
+        assertEquals("Title can't be empty",exception.getMessage());
     }
 }

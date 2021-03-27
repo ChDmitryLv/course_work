@@ -2,22 +2,31 @@ package lv.training.inventory.service;
 
 import lv.training.inventory.database.Database;
 import lv.training.inventory.database.InMemoryDb;
+import lv.training.inventory.exceptions.NotExistingCategory;
 import lv.training.inventory.exceptions.NotLessThanZero;
 import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
 import lv.training.inventory.model.ProductInput;
+import lv.training.inventory.ui.UIOperations;
+import lv.training.inventory.ui.UIOperationsImpl;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class ProductServiceImplTest {
 
     Database db = initDb();
-    UIOperationsStub testUI = new UIOperationsStub();
-    ProductService service = new ProductServiceImpl(testUI,db);
+    UIOperations mockedUI = mock(UIOperationsImpl.class);
+    InputParsers mockedParser = mock(InputParsers.class);
+    ProductService service = new ProductServiceImpl(mockedUI, db, mockedParser);
 
     Database initDb() {
         Database testDB = new InMemoryDb();
@@ -37,108 +46,98 @@ class ProductServiceImplTest {
     }
 
     @Test
-    void find() throws NotLessThanZero, ProductNotFound {
-        testUI.setId(1);
+    void find() {
+        when(mockedParser.parseId()).thenReturn(1);
 
         Product product = service.find();
 
-        assertEquals(1,product.getId());
-        assertEquals("Apple",product.getName());
-        assertEquals(BigDecimal.ONE,product.getPrice());
-        assertEquals(Category.FRUIT,product.getCategory());
-
-        testUI.setId(-1);
-        Exception lessThanZeroException = assertThrows(NotLessThanZero.class, service::find);
-
-        assertEquals("ID must be greater than 0",lessThanZeroException.getMessage());
-
-        testUI.setId(100);
-        Exception notFoundException = assertThrows(ProductNotFound.class, service::find);
-
-        assertEquals("Product not found",notFoundException.getMessage());
+        assertEquals(1, product.getId());
+        assertEquals("Apple", product.getName());
+        assertEquals(BigDecimal.ONE, product.getPrice());
+        assertEquals(Category.FRUIT, product.getCategory());
     }
 
     @Test
     void readAll(){
-        String shouldBeNull = testUI.getPrintAllCalled();
-        assertNull(shouldBeNull);
+        UIOperationsStub testUI = new UIOperationsStub();
+        ProductService service = new ProductServiceImpl(testUI,db,mockedParser);
+        String isCalled = testUI.getWhenMethodCalled();
+        assertNull(isCalled);
 
         service.readAll();
-        String expectedSuccess = testUI.getPrintAllCalled();
 
-        assertEquals("Successfully called",expectedSuccess);
+        String isCalledAfterReadAll = testUI.getWhenMethodCalled();
+        assertEquals("method called", isCalledAfterReadAll);
     }
 
     @Test
-    void update(){
-        testUI.setId(2);
-        testUI.setTitle("Cola");
-        testUI.setPrice(BigDecimal.valueOf(9.99));
-        testUI.setCategoryNumber(2);
+    void create() {
+        when(mockedUI.retrieveUserInput("Input product title:")).thenReturn("Bacon");
+        when(mockedParser.parseBigDecimal()).thenReturn(BigDecimal.ONE);
+        when(mockedParser.parseIntForCategory()).thenReturn(3);
+        ProductService myService = new ProductServiceImpl(mockedUI,db,mockedParser);
 
-        Product beforeUpdate = db.read(2);
-        assertEquals("Orange",beforeUpdate.getName());
-        assertEquals(BigDecimal.TEN, beforeUpdate.getPrice());
-        assertEquals(Category.FRUIT,beforeUpdate.getCategory());
-
-        service.update();
-
-        Product afterUpdate = db.read(2);
-        assertEquals("Cola",afterUpdate.getName());
-        assertEquals(BigDecimal.valueOf(9.99), afterUpdate.getPrice());
-        assertEquals(Category.DRINK,afterUpdate.getCategory());
-    }
-
-    @Test
-    void create(){
-        Product beforeCreate = db.read(3);
-        assertNull(beforeCreate);
-
-        testUI.setTitle("Bacon");
-        testUI.setPrice(BigDecimal.valueOf(3L));
-        testUI.setCategoryNumber(3);
-
-        service.create();
+        myService.create();
 
         Product afterCreate = db.read(3);
         assertEquals("Bacon",afterCreate.getName());
-        assertEquals(BigDecimal.valueOf(3L), afterCreate.getPrice());
+        assertEquals(BigDecimal.ONE, afterCreate.getPrice());
         assertEquals(Category.MEAL,afterCreate.getCategory());
     }
 
     @Test
+    void update(){
+        when(mockedParser.parseId()).thenReturn(1);
+        when(mockedUI.retrieveUserInput("Input product title:")).thenReturn("Cola");
+        when(mockedParser.parseBigDecimal()).thenReturn(BigDecimal.TEN);
+        when(mockedParser.parseIntForCategory()).thenReturn(2);
+
+        Product productBeforeUpdate = db.read(1);
+        assertEquals(1, productBeforeUpdate.getId());
+        assertEquals("Apple", productBeforeUpdate.getName());
+        assertEquals(BigDecimal.ONE, productBeforeUpdate.getPrice());
+        assertEquals(Category.FRUIT, productBeforeUpdate.getCategory());
+
+        service.update();
+
+        Product productAfterUpdate = db.read(1);
+        assertEquals(1, productAfterUpdate.getId());
+        assertEquals("Cola",productAfterUpdate.getName());
+        assertEquals(BigDecimal.TEN,productAfterUpdate.getPrice());
+        assertEquals(Category.DRINK,productAfterUpdate.getCategory());
+    }
+
+    @Test
     void delete(){
-        Product beforeDelete = db.read(1);
-        assertEquals(1,beforeDelete.getId());
-        assertEquals("Apple",beforeDelete.getName());
-        assertEquals(BigDecimal.ONE,beforeDelete.getPrice());
+        Product beforeDelete = db.read(2);
+        assertEquals(2,beforeDelete.getId());
+        assertEquals("Orange",beforeDelete.getName());
+        assertEquals(BigDecimal.TEN,beforeDelete.getPrice());
         assertEquals(Category.FRUIT,beforeDelete.getCategory());
 
-        testUI.setId(1);
+        when(mockedParser.parseId()).thenReturn(2);
         service.deleteProduct();
 
-        Product afterDelete = db.read(1);
+        Product afterDelete = db.read(2);
         assertNull(afterDelete);
     }
 
     @Test
-    void productInput(){
-        ProductServiceImpl service = new ProductServiceImpl(testUI,db);
-        testUI.setTitle("Banana");
-        testUI.setPrice(BigDecimal.valueOf(1.99));
-        testUI.setCategoryNumber(1);
+    void productInput() throws Exception {
+        ProductServiceImpl service = new ProductServiceImpl(mockedUI,db,mockedParser);
+
+        when(mockedUI.retrieveUserInput("Input product title:")).thenReturn("Banana");
+        when(mockedParser.parseBigDecimal()).thenReturn(BigDecimal.valueOf(1.99));
+        when(mockedParser.parseIntForCategory()).thenReturn(1);
         ProductInput result = service.productInput();
 
         assertEquals("Banana", result.getName());
         assertEquals(BigDecimal.valueOf(1.99), result.getPrice());
         assertEquals(Category.FRUIT, result.getCategory());
 
-        testUI.setTitle("Kiwi");
-        testUI.setPrice(BigDecimal.valueOf(1.99));
-        testUI.setCategoryNumber(7);
+        when(mockedParser.parseIntForCategory()).thenReturn(11);
+        Exception e = assertThrows(NotExistingCategory.class, service::productInput);
 
-        Exception illegalStateException = assertThrows(IllegalStateException.class, service::productInput);
-
-        assertEquals("Unexpected value: 7",illegalStateException.getMessage());
+        assertEquals("Not existing category",e.getMessage());
     }
 }

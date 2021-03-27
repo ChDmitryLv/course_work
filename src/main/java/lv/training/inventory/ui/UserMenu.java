@@ -15,19 +15,13 @@ public class UserMenu {
 
     static Scanner sc = new Scanner(System.in);
 
-    public void start() {
+    public void start(){
         boolean status = true;
         while (status) {
             menu();
             switch (chooseOperation()) {
                 case 1 -> service.create();
-                case 2 -> {
-                    try {
-                        service.find();
-                    } catch (NotLessThanZero | ProductNotFound notLessThanZero) {
-                        notLessThanZero.printStackTrace();
-                    }
-                }
+                case 2 -> service.find();
                 case 3 -> service.readAll();
                 case 4 -> service.update();
                 case 5 -> service.deleteProduct();

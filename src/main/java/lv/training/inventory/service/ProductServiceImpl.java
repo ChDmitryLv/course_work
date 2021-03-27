@@ -9,16 +9,19 @@ import lv.training.inventory.model.ProductInput;
 import lv.training.inventory.ui.UIOperations;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 public class ProductServiceImpl implements ProductService {
 
     private final UIOperations ui;
     private final Database db;
+    private final InputParsers parser;
 
-    public ProductServiceImpl(UIOperations ui, Database db) {
+    public ProductServiceImpl(UIOperations ui, Database db, InputParsers parser) {
         this.ui = ui;
         this.db = db;
+        this.parser = parser;
     }
 
     Validator validator = new Validator();
@@ -27,44 +30,49 @@ public class ProductServiceImpl implements ProductService {
     public void create() {
         try {
             ProductInput productInput = productInput();
-            validator.validateProductInput(productInput);
             Product product = new Product();
             product.setName(productInput.getName());
             product.setPrice(productInput.getPrice());
             product.setCategory(productInput.getCategory());
             db.create(product);
-        } catch (NotLessThanZero notLessThanZero) {
-            notLessThanZero.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
-    public Product find() throws NotLessThanZero, ProductNotFound {
-        int id = ui.idInput();
-        Product product;
-        validator.validateId(id);
-        product = db.read(id);
-        validator.notNull(product);
-        ui.printResult(product);
-        return product;
+    public Product find() {
+        parser.setUi(ui);
+        try {
+            int id = parser.parseId();
+            validator.validateId(id);
+            Product product = db.read(id);
+            validator.notNull(product);
+            ui.printResult(product);
+            return product;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     public void readAll() {
-        ui.printAll(db.readAll());
+        List<Product> list = db.readAll();
+        for (Product it : list) {
+            ui.printResult(it);
+        }
     }
 
     @Override
     public void update() {
-        Product product;
         try {
-            product = find();
-            //validator.notNull(product);
+            Product product = find();
+            validator.notNull(product);
             ProductInput productInput = productInput();
-            validator.validateProductInput(productInput);
             db.update(productInput, product.getId());
-        } catch (NotLessThanZero | ProductNotFound notLessThanZero) {
-            notLessThanZero.printStackTrace();
+        } catch (Exception notExistingCategory) {
+            notExistingCategory.printStackTrace();
         }
     }
 
@@ -75,15 +83,20 @@ public class ProductServiceImpl implements ProductService {
             Product product = find();
             validator.notNull(product);
             db.delete(product.getId());
-        } catch (ProductNotFound | NotLessThanZero productNotFound) {
-            productNotFound.printStackTrace();
+        } catch (ProductNotFound | NotLessThanZero e) {
+            e.printStackTrace();
         }
     }
 
-    public ProductInput productInput() {
-        String name = ui.titleInput();
-        BigDecimal price = ui.priceInput();
-        int categoryNumber = ui.categoryInput();
+    public ProductInput productInput()
+            throws Exception {
+        parser.setUi(ui);
+        String name = ui.retrieveUserInput("Input product title:");
+        validator.notEmpty(name);
+        BigDecimal price = parser.parseBigDecimal();
+        validator.validateProductPrice(price);
+        int categoryNumber = parser.parseIntForCategory();
+        validator.validateCategoryInput(categoryNumber);
         Category category = switch (categoryNumber) {
             case 1 -> Category.FRUIT;
             case 2 -> Category.DRINK;
