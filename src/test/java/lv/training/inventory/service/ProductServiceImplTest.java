@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductServiceImplTest {
 
     Database db = initDb();
-    UIOperationsTestFunctions testUI = new UIOperationsTestFunctions();
+    UIOperationsStub testUI = new UIOperationsStub();
     ProductService service = new ProductServiceImpl(testUI,db);
 
     Database initDb() {

@@ -6,7 +6,7 @@ import lv.training.inventory.ui.UIOperations;
 import java.math.BigDecimal;
 import java.util.List;
 
-public class UIOperationsTestFunctions implements UIOperations {
+public class UIOperationsStub implements UIOperations {
 
     private int id;
     private String printAllCalled;
