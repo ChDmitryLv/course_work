@@ -11,7 +11,7 @@ public class UserMenu {
         this.service = service;
     }
 
-    static Scanner sc = new Scanner(System.in);
+    Scanner sc = new Scanner(System.in);
 
     public void start(){
         boolean status = true;
@@ -41,7 +41,7 @@ public class UserMenu {
         System.out.println("0. Exit");
     }
 
-    private Integer chooseOperation() {
+    Integer chooseOperation() {
         int operationNumber;
         while (!sc.hasNextInt()) {
             System.out.println("Only number allowed");
