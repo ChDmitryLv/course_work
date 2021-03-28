@@ -6,10 +6,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Scanner;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 class UserMenuTest {
@@ -21,22 +17,24 @@ class UserMenuTest {
 
     @Test
     void start() {
-        UserMenu userMenu1 = Mockito.spy(userMenu);
+        UserMenu userMenuSpy = Mockito.spy(userMenu);
 
         doReturn(5)
                 .doReturn(4)
                 .doReturn(3)
                 .doReturn(2)
                 .doReturn(1)
-                .doReturn(0).when(userMenu1).chooseOperation();
-        userMenu1.start();
+                .doReturn(0).when(userMenuSpy).chooseOperation();
+        doNothing().when(userMenuSpy).menu();
+
+        userMenuSpy.start();
 
         verify(serviceMock).create();
         verify(serviceMock).find();
         verify(serviceMock).readAll();
         verify(serviceMock).update();
         verify(serviceMock).deleteProduct();
-        verify(userMenu1, atLeast(6)).chooseOperation();
+        verify(userMenuSpy, atLeast(6)).chooseOperation();
 
     }
 }
