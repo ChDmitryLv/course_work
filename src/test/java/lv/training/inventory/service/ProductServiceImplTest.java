@@ -3,19 +3,14 @@ package lv.training.inventory.service;
 import lv.training.inventory.database.Database;
 import lv.training.inventory.database.InMemoryDb;
 import lv.training.inventory.exceptions.NotExistingCategory;
-import lv.training.inventory.exceptions.NotLessThanZero;
-import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.model.Category;
 import lv.training.inventory.model.Product;
 import lv.training.inventory.model.ProductInput;
 import lv.training.inventory.ui.UIOperations;
 import lv.training.inventory.ui.UIOperationsImpl;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;

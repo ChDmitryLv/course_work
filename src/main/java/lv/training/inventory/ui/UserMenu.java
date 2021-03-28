@@ -1,7 +1,5 @@
 package lv.training.inventory.ui;
 
-import lv.training.inventory.exceptions.NotLessThanZero;
-import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.service.ProductService;
 
 import java.util.Scanner;
