@@ -2,10 +2,9 @@ package lv.training.inventory.service;
 
 import lv.training.inventory.exceptions.NoEmptyTitle;
 import lv.training.inventory.exceptions.NotExistingCategory;
-import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.exceptions.NotLessThanZero;
+import lv.training.inventory.exceptions.ProductNotFound;
 import lv.training.inventory.model.Product;
-import lv.training.inventory.model.ProductInput;
 
 import java.math.BigDecimal;
 
