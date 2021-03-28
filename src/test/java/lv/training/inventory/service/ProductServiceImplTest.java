@@ -11,10 +11,10 @@ import lv.training.inventory.ui.UIOperationsImpl;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class ProductServiceImplTest {
 
@@ -54,15 +54,15 @@ class ProductServiceImplTest {
 
     @Test
     void readAll(){
-        UIOperationsStub testUI = new UIOperationsStub();
-        ProductService service = new ProductServiceImpl(testUI,db,mockedParser);
-        String isCalled = testUI.getWhenMethodCalled();
-        assertNull(isCalled);
+        Database mockedDb = mock(Database.class);
+        ProductService service = new ProductServiceImpl(mockedUI,mockedDb,mockedParser);
+        List<Product> tmpListOfProducts = db.readAll();
+        when(mockedDb.readAll()).thenReturn(tmpListOfProducts);
 
         service.readAll();
 
-        String isCalledAfterReadAll = testUI.getWhenMethodCalled();
-        assertEquals("method called", isCalledAfterReadAll);
+        verify(mockedDb, atLeastOnce()).readAll();
+        verify(mockedUI, atLeast(tmpListOfProducts.size())).printResult(any());
     }
 
     @Test
@@ -109,8 +109,8 @@ class ProductServiceImplTest {
         assertEquals("Orange",beforeDelete.getName());
         assertEquals(BigDecimal.TEN,beforeDelete.getPrice());
         assertEquals(Category.FRUIT,beforeDelete.getCategory());
-
         when(mockedParser.parseId()).thenReturn(2);
+
         service.deleteProduct();
 
         Product afterDelete = db.read(2);
