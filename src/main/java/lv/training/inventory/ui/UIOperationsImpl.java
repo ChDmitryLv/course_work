@@ -6,7 +6,8 @@ import java.util.Scanner;
 
 public class UIOperationsImpl implements UIOperations {
 
-    public UIOperationsImpl() {}
+    public UIOperationsImpl() {
+    }
 
     @Override
     public String retrieveUserInput(String messageForTitle) {
