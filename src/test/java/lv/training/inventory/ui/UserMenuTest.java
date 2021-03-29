@@ -1,25 +1,25 @@
 package lv.training.inventory.ui;
 
 import lv.training.inventory.service.ProductService;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Mockito;
+
+import java.util.Scanner;
 
 import static org.mockito.Mockito.*;
 
 class UserMenuTest {
-    @Mock
-    ProductService serviceMock = mock(ProductService.class);
 
-    @InjectMocks
+    ProductService serviceMock = mock(ProductService.class);
     UserMenu userMenu = new UserMenu(serviceMock);
 
     @Test
     void start() {
         UserMenu userMenuSpy = Mockito.spy(userMenu);
 
-        doReturn(5)
+        doReturn(57)
+                .doReturn(5)
                 .doReturn(4)
                 .doReturn(3)
                 .doReturn(2)
@@ -35,6 +35,6 @@ class UserMenuTest {
         verify(serviceMock).update();
         verify(serviceMock).deleteProduct();
         verify(userMenuSpy, atLeast(6)).chooseOperation();
-
+        verify(userMenuSpy, atLeast(6)).menu();
     }
 }
