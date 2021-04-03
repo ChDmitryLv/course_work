@@ -4,5 +4,5 @@ LU course 2021 Final Work
 3 layer application: UI - Service - DB + junit & mockito
 Test coverage - Jacoco report
 
-![course_rowk](https://user-images.githubusercontent.com/76969906/113406329-fb54cd80-93b3-11eb-976a-226db1c4d60d.PNG)
+![course_rowk2](https://user-images.githubusercontent.com/76969906/113477159-b8b0f500-9488-11eb-8193-d55136a07385.PNG)
 
