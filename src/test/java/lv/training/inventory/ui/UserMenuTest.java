@@ -1,18 +1,24 @@
 package lv.training.inventory.ui;
 
 import lv.training.inventory.service.ProductService;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-
-import java.util.Scanner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.*;
 
+
+@ExtendWith(MockitoExtension.class)
 class UserMenuTest {
 
-    ProductService serviceMock = mock(ProductService.class);
-    UserMenu userMenu = new UserMenu(serviceMock);
+    @Mock
+    ProductService serviceMock;
+
+    @InjectMocks
+    UserMenu userMenu;
 
     @Test
     void start() {

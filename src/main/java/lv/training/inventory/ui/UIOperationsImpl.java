@@ -9,9 +9,10 @@ public class UIOperationsImpl implements UIOperations {
     public UIOperationsImpl() {
     }
 
+    Scanner sc = new Scanner(System.in);
+
     @Override
     public String retrieveUserInput(String messageForTitle) {
-        Scanner sc = new Scanner(System.in);
         System.out.println(messageForTitle);
         return sc.nextLine();
     }
